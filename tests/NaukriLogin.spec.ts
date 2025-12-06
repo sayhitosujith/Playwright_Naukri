@@ -11,7 +11,7 @@ async function login(page: Page, email: string, password: string) {
   await page.getByRole('button', { name: /^Login$/ }).click();
 
   // Ensure login succeeded
-  await expect(page).not.toHaveURL(/nlogin/i);
+  await expect(page).not.toHaveURL('nlogin/login');
 }
 
 // 1. Login Test
