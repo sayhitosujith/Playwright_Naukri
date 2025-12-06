@@ -1,58 +1,52 @@
-//............Run Browser specific Commands...............................
-// npx playwright test tests/DutyDoctorLogin.spec.ts --project=Chrome
-// npx playwright test tests/DutyDoctorLogin.spec.ts --project=chromium
-//.....................................................
-// npx playwright test --grep "@smoke"
-// npx playwright test -g "Homepage: Verify Navigation bars " --headed
-
-//........Run only Smoke AND Negative tests.........
-//npx playwright test --grep "@Smoke.*@negative"
-
-//.....Run Smoke tests but exclude Negative tests.....
-//npx playwright test --grep "@Smoke" --grep-invert "@negative"
-
-
-
 import { test, expect } from '@playwright/test';
-import NaukriLoginPage from '../Pages/NaukriLogin.js';
-import fs from 'fs';
 
+const BASE = 'https://www.naukri.com/nlogin/login';
 
-// Load credentials from JSON
-const config = JSON.parse(fs.readFileSync('./credentials.json', 'utf-8'));
-const BASE_URL = config.baseUrl;
-const USERNAME = String(config.username);
-const PASSWORD = String(config.password);
-const RUN_HEADER_CHECKS =
-  process.env.RUN_HEADER_CHECKS === 'true' ||
-  process.env.RUN_HEADER_CHECKS === '1';
+test.describe('@Smoke', () => {
 
-test.describe('Naukri Login validations and Homepage functionality', () => {
-
-  // 1. Happy Path: Login succeeds - PASS
-
-  test.describe('@Smoke @Regression', () => {
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
-    const login = new NaukriLoginPage(page);
 
-    await login.goto(BASE_URL);
-    await login.login(USERNAME, PASSWORD);
+    await page.goto(BASE);
 
-    await expect.poll(async () => login.isAuthenticated(), {
-      timeout: 5000
-    }).toBe(false);
+    // Login
+    await page.getByPlaceholder('Enter Email ID / Username').fill('vidhyaln95@gmail.com');
+    await page.getByPlaceholder('Enter Password').fill('Qw@12345678');
+    await page.getByRole('button', { name: /^Login$/ }).click();
+
+    // Verify logged in by expecting URL to change away from login
+    await expect(page).not.toHaveURL(/nlogin/i);
   });
+
+  // -2.Upload resume after login-------------------------------------------------------------------
+test.describe('@Smoke', () => {
+  test('Upload resume after login', async ({ page }) => {
+
+    await page.goto(BASE);
+
+    // Login
+    await page.getByPlaceholder('Enter Email ID / Username').fill('vidhyaln95@gmail.com');
+    await page.getByPlaceholder('Enter Password').fill('Qw@12345678');
+    await page.getByRole('button', { name: /^Login$/ }).click();
+
+    // Ensure login completed
+    await expect(page).not.toHaveURL(/nlogin/i);
+
+    // ---- OPEN PROFILE MENU ----
+    // Naukri uses a "View profile" link in the header (ROLE = link)
+    await page.getByRole('link', { name: /view profile/i }).click();
+
+    // ---- WAIT FOR PROFILE PAGE ----
+    await expect(page).toHaveURL(/profile/i);
+
+    // ---- UPLOAD RESUME ----
+    // Direct file input (always works even if hidden)
+    const fileChooser = page.locator('input[type="file"]');
+    await fileChooser.setInputFiles('Files/Vidhya_Resume.pdf');
+
+    // ---- ASSERT RESUME UPLOAD SUCCESS ----
+    await expect(
+      page.getByText(/resume (uploaded|updated|success)/i)
+    ).toBeVisible();
   });
-
- 
-
-
-
-
-
 
 });
-
-
-  
-         

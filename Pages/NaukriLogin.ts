@@ -15,13 +15,9 @@ export class DutyDoctorLoginPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.username = page.getByRole('textbox', {
-      name: 'Username or Email Address'
-    });
+    this.username = page.getByLabel('Enter Email ID / Username');
 
-    this.password = page.getByRole('textbox', {
-      name: 'Password'
-    });
+    this.password = page.getByLabel('Enter Password');
 
     this.loginButton = page.getByRole('button', { name: 'Login' });
 
