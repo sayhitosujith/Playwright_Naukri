@@ -24,22 +24,34 @@ test.describe('@Regression', () => {
 // 2. Resume Upload Test
 test.describe('@smoke', () => {
   test('Upload resume after login', async ({ page }) => {
+    // ---- LOGIN ----
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
 
+    // ---- WAIT FOR DASHBOARD ----
+    // Wait until the profile link is visible before clicking
+    const profileLink = page.getByRole('link', { name: /view profile/i });
+    await profileLink.waitFor({ state: 'visible', timeout: 60000 });
+
     // ---- OPEN PROFILE MENU ----
-    await page.getByRole('link', { name: /view profile/i }).click();
-    await expect(page).toHaveURL(/profile/i);
+    await profileLink.click();
+    await expect(page).toHaveURL(/profile/i, { timeout: 10000 });
 
     // ---- UPLOAD RESUME ----
     const resumeInput = page.locator('input#attachCV');
+    await resumeInput.waitFor({ state: 'visible', timeout: 10000 });
     await resumeInput.setInputFiles('Files/Vidhya_Resume.pdf');
 
     // Click "Update resume" button
-    await page.getByRole('button', { name: /update resume/i }).click();
+    const updateButton = page.getByRole('button', { name: /update resume/i });
+    await updateButton.waitFor({ state: 'visible', timeout: 10000 });
+    await updateButton.click();
 
     // ---- ASSERT RESUME UPLOAD SUCCESS ----
-    await expect(
-      page.getByText('Resume has been successfully uploaded.', { exact: false })
-    ).toBeVisible({ timeout: 10000 });
+    const successMessage = page.getByText(
+      'Resume has been successfully uploaded.',
+      { exact: false }
+    );
+    await successMessage.waitFor({ state: 'visible', timeout: 10000 });
+    await expect(successMessage).toBeVisible();
   });
 });
