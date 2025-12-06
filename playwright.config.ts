@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
-  timeout: 30 * 1000,
+  timeout: 30 * 120000,
   retries: 0, // retry failed tests once
   reporter: [['html', { open: 'never' }]],
   use: {

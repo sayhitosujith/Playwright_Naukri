@@ -1,9 +1,11 @@
 import { test, expect, Page } from '@playwright/test';
+import fs from 'fs';
 
 const BASE = 'https://www.naukri.com/nlogin/login';
 
 // Helper function to perform login
 async function login(page: Page, email: string, password: string) {
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(BASE);
 
   await page.getByPlaceholder('Enter Email ID / Username').fill(email);
@@ -45,6 +47,7 @@ test.describe('@smoke', () => {
     const updateButton = page.getByRole('button', { name: /update resume/i });
     await updateButton.waitFor({ state: 'visible', timeout: 10000 });
     await updateButton.click();
+    console.log('Resume file exists:', fs.existsSync('Files/Vidhya_Resume.pdf'));
 
     // ---- ASSERT RESUME UPLOAD SUCCESS ----
     const successMessage = page.getByText(
