@@ -15,14 +15,14 @@ async function login(page: Page, email: string, password: string) {
 }
 
 // 1. Login Test
-test.describe('@Smoke', () => {
+test.describe('@Regression', () => {
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
   });
 });
 
 // 2. Resume Upload Test
-test.describe('@Regression', () => {
+test.describe('@smoke', () => {
   test('Upload resume after login', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
 
