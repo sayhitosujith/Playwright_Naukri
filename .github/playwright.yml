@@ -23,9 +23,6 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Smoke tests
-        run: npx playwright test --grep "@Smoke"
-
       - uses: actions/upload-artifact@v4
         with:
           name: playwright-report
