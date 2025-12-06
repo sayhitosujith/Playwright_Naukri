@@ -1,31 +1,27 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 const BASE = 'https://www.naukri.com/nlogin/login';
+
+// Helper function to perform login
+async function login(page: Page, email: string, password: string) {
+  await page.goto(BASE);
+
+  await page.getByPlaceholder('Enter Email ID / Username').fill(email);
+  await page.getByPlaceholder('Enter Password').fill(password);
+  await page.getByRole('button', { name: /^Login$/ }).click();
+
+  // Ensure login succeeded
+  await expect(page).not.toHaveURL(/nlogin/i);
+}
 
 test.describe('@Smoke', () => {
 
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
-    await page.goto(BASE);
-
-    // Login
-    await page.getByPlaceholder('Enter Email ID / Username').fill('vidhyaln95@gmail.com');
-    await page.getByPlaceholder('Enter Password').fill('Qw@12345678');
-    await page.getByRole('button', { name: /^Login$/ }).click();
-
-    // Verify login success
-    await expect(page).not.toHaveURL(/nlogin/i);
+    await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
   });
 
   test('Upload resume after login', async ({ page }) => {
-    await page.goto(BASE);
-
-    // Login
-    await page.getByPlaceholder('Enter Email ID / Username').fill('vidhyaln95@gmail.com');
-    await page.getByPlaceholder('Enter Password').fill('Qw@12345678');
-    await page.getByRole('button', { name: /^Login$/ }).click();
-
-    // Ensure login completed
-    await expect(page).not.toHaveURL(/nlogin/i);
+    await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
 
     // ---- OPEN PROFILE MENU ----
     await page.getByRole('link', { name: /view profile/i }).click();
@@ -39,7 +35,6 @@ test.describe('@Smoke', () => {
     await page.getByRole('button', { name: /update resume/i }).click();
 
     // ---- ASSERT RESUME UPLOAD SUCCESS ----
-    // Use the exact success message with a longer timeout
     await expect(
       page.getByText('Resume has been successfully uploaded.', { exact: false })
     ).toBeVisible({ timeout: 10000 });
