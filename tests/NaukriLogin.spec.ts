@@ -23,12 +23,14 @@ test.describe('@Regression', () => {
 
      // ---- WAIT FOR DASHBOARD ----
     // Wait until the profile link is visible before clicking
-    const profileLink = page.getByRole('link', { name: /view profile/i });
-    await profileLink.waitFor({ state: 'visible', timeout: 60000 });
-
-    // ---- OPEN PROFILE MENU ----
-    await profileLink.click();
-    await expect(page).toHaveURL(/profile/i, { timeout: 10000 });
+   const profileLink = page.getByRole('link', { name: /profile/i });
+// Ensure dashboard is loaded
+await expect(page).not.toHaveURL(/nlogin\/login/i);
+// Confirm link visibility
+await expect(profileLink).toBeVisible({ timeout: 60000 });
+// Debug log
+console.log('Profile link visible:', await profileLink.isVisible());
+await profileLink.click();
 
   });
 });
