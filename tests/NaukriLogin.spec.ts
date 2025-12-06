@@ -41,11 +41,15 @@ test.describe('@smoke', () => {
 
     // ---- WAIT FOR DASHBOARD ----
     // Wait until the profile link is visible before clicking
-    const profileLink = page.getByRole('link', { name: /view profile/i });
-    await profileLink.waitFor({ state: 'visible', timeout: 60000 });
+// Add a check after login to ensure you are on the right page
+await expect(page).not.toHaveURL(/nlogin\/login/i);
+// Optionally, log the current URL to help debug
+console.log('Current URL after login:', page.url());
 
-    // ---- OPEN PROFILE MENU ----
-    await profileLink.click();
+// Use a more robust selector if the link text has changed
+const profileLink = page.getByRole('link', { name: /profile/i });
+await profileLink.waitFor({ state: 'visible', timeout: 60000 });
+await profileLink.click();
     await expect(page).toHaveURL(/profile/i, { timeout: 10000 });
 
     // ---- UPLOAD RESUME ----
