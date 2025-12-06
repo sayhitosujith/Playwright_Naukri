@@ -14,12 +14,15 @@ async function login(page: Page, email: string, password: string) {
   await expect(page).not.toHaveURL(/nlogin/i);
 }
 
-test.describe('@Smoke @Regression', () => {
-
+// 1. Login Test
+test.describe('@Smoke', () => {
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
   });
+});
 
+// 2. Resume Upload Test
+test.describe('@Regression', () => {
   test('Upload resume after login', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
 
@@ -28,7 +31,7 @@ test.describe('@Smoke @Regression', () => {
     await expect(page).toHaveURL(/profile/i);
 
     // ---- UPLOAD RESUME ----
-    const resumeInput = page.locator('#attachCV');
+    const resumeInput = page.locator('input#attachCV');
     await resumeInput.setInputFiles('Files/Vidhya_Resume.pdf');
 
     // Click "Update resume" button
@@ -39,5 +42,4 @@ test.describe('@Smoke @Regression', () => {
       page.getByText('Resume has been successfully uploaded.', { exact: false })
     ).toBeVisible({ timeout: 10000 });
   });
-
 });
