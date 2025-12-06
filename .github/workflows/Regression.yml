@@ -2,9 +2,9 @@ name: Playwright Regression Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
   schedule:
     - cron: "30 7 * * 0"   # Runs Every Sunday 1 PM IST (07:30 UTC)

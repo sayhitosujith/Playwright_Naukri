@@ -14,7 +14,7 @@ async function login(page: Page, email: string, password: string) {
   await expect(page).not.toHaveURL(/nlogin/i);
 }
 
-test.describe('@Smoke', () => {
+test.describe('@Smoke @Regression', () => {
 
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
