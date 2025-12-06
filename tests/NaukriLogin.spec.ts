@@ -16,10 +16,20 @@ async function login(page: Page, email: string, password: string) {
   await expect(page).not.toHaveURL('nlogin/login');
 }
 
-// 1. Login Test
+// 1. Login Test and Navigate to Profile
 test.describe('@Regression', () => {
   test('Happy Path: Login succeeds with valid credentials', async ({ page }) => {
     await login(page, 'vidhyaln95@gmail.com', 'Qw@12345678');
+
+     // ---- WAIT FOR DASHBOARD ----
+    // Wait until the profile link is visible before clicking
+    const profileLink = page.getByRole('link', { name: /view profile/i });
+    await profileLink.waitFor({ state: 'visible', timeout: 60000 });
+
+    // ---- OPEN PROFILE MENU ----
+    await profileLink.click();
+    await expect(page).toHaveURL(/profile/i, { timeout: 10000 });
+
   });
 });
 
