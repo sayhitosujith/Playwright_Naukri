@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import fs from 'fs';
+import * as fs from "fs";
 
 const BASE = 'https://www.naukri.com/nlogin/login';
 

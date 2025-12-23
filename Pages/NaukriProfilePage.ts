@@ -1,9 +1,9 @@
 import type { Page, Locator } from '@playwright/test';
 
 /**
- * Page Object for DutyDoctor staging login and header interactions.
+ * Page Object for Naukri profile interactions.
  */
-export class DutyDoctorLoginPage {
+export class NaukriProfilePage {
   readonly page: Page;
   readonly username: Locator;
   readonly password: Locator;
