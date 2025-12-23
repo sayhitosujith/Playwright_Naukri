@@ -13,7 +13,7 @@ async function login(page: Page, email: string, password: string) {
   await page.getByRole('button', { name: /^Login$/ }).click();
 
   // Ensure login succeeded
-  await expect(page).not.toHaveURL('nlogin/login');
+  await expect(page).not.toHaveURL('https://www.naukri.com/nlogin/login');
 }
 
 // 1. Login Test and Navigate to Profile
